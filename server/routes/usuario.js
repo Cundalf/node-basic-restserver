@@ -98,7 +98,7 @@ app.put('/usuario/:id', function (req, res) {
 
 app.delete('/usuario/:id', function (req, res) {
     let id = req.params.id;
-    
+
     //Usuario.findByIdAndRemove(id, (err, usuarioDB) => {
     Usuario.findByIdAndUpdate(id, body, { new: true }, (err, usuarioDB) => {
         if (err) {
@@ -107,8 +107,8 @@ app.delete('/usuario/:id', function (req, res) {
                 err
             });
         }
-        
-        if(!usuarioDB) {
+
+        if (!usuarioDB) {
             return res.status(400).json({
                 ok: false,
                 err: {
@@ -116,7 +116,7 @@ app.delete('/usuario/:id', function (req, res) {
                 }
             });
         }
-        
+
         res.json({
             ok: true,
             usuario: usuarioDB

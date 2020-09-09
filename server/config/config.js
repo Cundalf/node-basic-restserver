@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 //* Puerto
 process.env.PORT = process.env.PORT || 3000;
 
@@ -8,9 +10,9 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 let urlDB;
 
 if (process.env.NODE_ENV === 'dev') {
-    urldb = 'mongodb://localhost:27017/cafe';
+    urlDB = process.env.MONGO_DEV;
 } else {
-    urldb = 'mongodb://localhost:27017/cafe';
+    urlDB = process.env.MONGO_PROD;
 }
 
 process.env.URLDB = urlDB;
