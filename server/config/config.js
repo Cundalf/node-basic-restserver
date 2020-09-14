@@ -6,6 +6,12 @@ process.env.PORT = process.env.PORT || 3000;
 //* Entorno
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 
+//* Vencimiento del token
+process.env.EXP_TOKEN = '1h';
+
+//* Seed
+process.env.SEED_TOKEN = process.env.SEED_TOKEN || 'devseed';
+
 //* DB
 let urlDB;
 
