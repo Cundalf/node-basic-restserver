@@ -1,43 +1,55 @@
 const express = require('express');
 
-const { verificaToken } = require('../middlewares/authentication');
+const { verificaToken, verificaAdminRole } = require('../middlewares/authentication');
 
 const app = express();
 
 let Categoria = require('../models/categoria');
-/*
+
 app.get('/categoria', verificaToken, (req, res) => {
-
-    let desde = req.query.desde || 0;
-    desde = Number(desde);
-
-    let limite = req.query.limite || 5;
-    limite = Number(limite);
-
-    Usuario.find({ estado: true }, 'nombre email estado role google img')
-        .skip(desde)
-        .limit(limite)
-        .exec((err, usuarios) => {
-            if (err) {
-                return res.status(400).json({
-                    ok: false,
-                    err
-                });
-            }
-
-            Usuario.countDocuments({ estado: true }, (err, cant) => {
-
-                res.json({
-                    ok: true,
-                    usuarios,
-                    cant
-                });
-
+    Categoria.find({}).exec((err, categorias) => {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                err
             });
+        }
 
+        res.json({
+            ok: true,
+            categorias
         });
+    });
 });
-*/
+
+app.get('/categoria/:id', verificaToken, (req, res) => {
+
+    let id = req.params.id;
+
+    Categoria.findById(id, (err, categoriaDB) => {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                err
+            });
+        }
+
+        if (!categoriaDB) {
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: 'El ID no es valido.'
+                }
+            });
+        }
+
+        res.json({
+            ok: true,
+            categoria: categoriaDB
+        });
+    });
+});
+
 app.post('/categoria', verificaToken, (req, res) => {
     let body = req.body;
 
@@ -53,7 +65,7 @@ app.post('/categoria', verificaToken, (req, res) => {
                 err
             });
         }
-        
+
         if (!categoriaDB) {
             return res.status(400).json({
                 ok: false,
@@ -72,12 +84,12 @@ app.put('/categoria/:id', verificaToken, (req, res) => {
 
     let id = req.params.id;
     let body = req.body;
-    
+
     let descCategoria = {
         descripcion: body.descripcion
     };
 
-    Usuario.findByIdAndUpdate(id, descCategoria, { new: true, runValidators: true, useFindAndModify: false }, (err, categoriaDB) => {
+    Categoria.findByIdAndUpdate(id, descCategoria, { new: true, runValidators: true, useFindAndModify: false }, (err, categoriaDB) => {
 
         if (err) {
             return res.status(500).json({
@@ -93,12 +105,11 @@ app.put('/categoria/:id', verificaToken, (req, res) => {
     });
 
 });
-/*
-app.delete('/usuario/:id', [verificaToken, verificaAdminRole], (req, res) => {
+
+app.delete('/categoria/:id', [verificaToken, verificaAdminRole], (req, res) => {
     let id = req.params.id;
 
-    //Usuario.findByIdAndRemove(id, (err, usuarioDB) => {
-    Usuario.findByIdAndUpdate(id, { estado: false }, { new: true, useFindAndModify: false }, (err, usuarioDB) => {
+    Categoria.findByIdAndRemove(id, (err, categoriaDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -106,20 +117,20 @@ app.delete('/usuario/:id', [verificaToken, verificaAdminRole], (req, res) => {
             });
         }
 
-        if (!usuarioDB) {
+        if (!categoriaDB) {
             return res.status(400).json({
                 ok: false,
                 err: {
-                    message: 'Usuario no encontrado'
+                    message: 'Categoria no encontrada'
                 }
             });
         }
 
         res.json({
             ok: true,
-            usuario: usuarioDB
+            message: 'Categoria Borrada'
         });
     });
 });
-*/
+
 module.exports = app;
