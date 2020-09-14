@@ -68,7 +68,7 @@ app.post('/categoria', verificaToken, (req, res) => {
     });
 });
 
-app.put('/usuario/:id', [verificaToken, verificaAdminRole], (req, res) => {
+app.put('/categoria/:id', verificaToken, (req, res) => {
 
     let id = req.params.id;
     let body = req.body;
