@@ -1,27 +1,25 @@
 const express = require('express');
 
-const bcrypt = require('bcrypt');
-const _ = require('underscore');
-
-const Usuario = require('../models/usuario');
-const { verificaToken, verificaAdminRole } = require('../middlewares/authentication');
+const { verificaToken } = require('../middlewares/authentication');
 
 const app = express();
 
-app.get('/usuario', verificaToken, (req, res) => {
+let Categoria = require('../models/categoria');
+/*
+app.get('/categoria', verificaToken, (req, res) => {
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
 
     let limite = req.query.limite || 5;
     limite = Number(limite);
-    
+
     Usuario.find({ estado: true }, 'nombre email estado role google img')
         .skip(desde)
         .limit(limite)
         .exec((err, usuarios) => {
             if (err) {
-                return res.status(500).json({
+                return res.status(400).json({
                     ok: false,
                     err
                 });
@@ -39,20 +37,25 @@ app.get('/usuario', verificaToken, (req, res) => {
 
         });
 });
-
-app.post('/usuario', [verificaToken, verificaAdminRole], (req, res) => {
+*/
+app.post('/categoria', verificaToken, (req, res) => {
     let body = req.body;
 
-    let usuario = new Usuario({
-        nombre: body.nombre,
-        email: body.email,
-        password: bcrypt.hashSync(body.password, 10),
-        role: body.role
+    let usuario = new Categoria({
+        descripcion: body.descripcion,
+        usuario: req.usuario._id,
     });
 
-    usuario.save((err, usuarioDB) => {
+    usuario.save((err, categoriaDB) => {
         if (err) {
             return res.status(500).json({
+                ok: false,
+                err
+            });
+        }
+        
+        if (!categoriaDB) {
+            return res.status(400).json({
                 ok: false,
                 err
             });
@@ -60,7 +63,7 @@ app.post('/usuario', [verificaToken, verificaAdminRole], (req, res) => {
 
         res.json({
             ok: true,
-            usuario: usuarioDB
+            categoria: categoriaDB
         });
     });
 });
@@ -68,15 +71,13 @@ app.post('/usuario', [verificaToken, verificaAdminRole], (req, res) => {
 app.put('/usuario/:id', [verificaToken, verificaAdminRole], (req, res) => {
 
     let id = req.params.id;
-    let body = _.pick(req.body, [
-        'nombre',
-        'email',
-        'img',
-        'role',
-        'estado'
-    ]);
+    let body = req.body;
+    
+    let descCategoria = {
+        descripcion: body.descripcion
+    };
 
-    Usuario.findByIdAndUpdate(id, body, { new: true, runValidators: true, useFindAndModify: false }, (err, usuarioDB) => {
+    Usuario.findByIdAndUpdate(id, descCategoria, { new: true, runValidators: true, useFindAndModify: false }, (err, categoriaDB) => {
 
         if (err) {
             return res.status(500).json({
@@ -87,12 +88,12 @@ app.put('/usuario/:id', [verificaToken, verificaAdminRole], (req, res) => {
 
         res.json({
             ok: true,
-            usuario: usuarioDB
+            categoria: categoriaDB
         });
     });
 
 });
-
+/*
 app.delete('/usuario/:id', [verificaToken, verificaAdminRole], (req, res) => {
     let id = req.params.id;
 
@@ -120,5 +121,5 @@ app.delete('/usuario/:id', [verificaToken, verificaAdminRole], (req, res) => {
         });
     });
 });
-
+*/
 module.exports = app;
