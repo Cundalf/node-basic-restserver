@@ -1,3 +1,4 @@
+/*
 const express = require('express');
 
 const { verificaToken, verificaAdminRole } = require('../middlewares/authentication');
@@ -8,21 +9,21 @@ let Categoria = require('../models/categoria');
 
 app.get('/categoria', verificaToken, (req, res) => {
     Categoria.find({})
-    .sort('descripcion')
-    .populate('usuario', 'nombre email')
-    .exec((err, categorias) => {
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                err
-            });
-        }
+        .sort('descripcion')
+        .populate('usuario', 'nombre email')
+        .exec((err, categorias) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    err
+                });
+            }
 
-        res.json({
-            ok: true,
-            categorias
+            res.json({
+                ok: true,
+                categorias
+            });
         });
-    });
 });
 
 app.get('/categoria/:id', verificaToken, (req, res) => {
@@ -137,3 +138,5 @@ app.delete('/categoria/:id', [verificaToken, verificaAdminRole], (req, res) => {
 });
 
 module.exports = app;
+
+*/
