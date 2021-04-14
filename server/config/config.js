@@ -7,7 +7,7 @@ process.env.PORT = process.env.PORT || 3000;
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 
 //* Vencimiento del token
-process.env.EXP_TOKEN = '1h';
+process.env.EXP_TOKEN = '15m';
 
 //* Seed
 process.env.SEED_TOKEN = process.env.SEED_TOKEN || 'devseed';
@@ -23,5 +23,4 @@ if (process.env.NODE_ENV === 'dev') {
 
 process.env.URLDB = urlDB;
 
-// Google Client ID
-process.env.GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '261020742032-478kn1ull1h4t2kpl8v3siflgtentk3l.apps.googleusercontent.com';
+// Google Client ID: process.env.GOOGLE_CLIENT_ID

@@ -1,24 +1,36 @@
 require('./config/config');
 
+//* Dependencias
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const helmet = require('helmet');
+const RateLimit = require('express-rate-limit');
 
 const app = express();
 
-const bodyParser = require('body-parser');
-const { restart } = require('nodemon');
-
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
-
-// parse application/json
-app.use(bodyParser.json());
-
-// habilitacion de carpeta public
+//* Parse application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: false }));
+//* Parse application/json
+app.use(express.json());
+//* Habilitacion de carpeta public
 app.use(express.static(path.resolve(__dirname, '../public')));
 
-// Configuracion global de rutas
+//* Uso de helmet con fines de seguridad
+app.use(helmet());
+
+//* Seguridad para DDOS
+app.enable('trust proxy');
+
+// Sin delay de request. 100 request por IP en 15 minutos
+var limiter = new RateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    delayMs: 0 
+});
+app.use(limiter);
+
+//* Configuracion global de rutas
 app.use(require('./routes/index'));
 
 mongoose.connect(process.env.URLDB,
